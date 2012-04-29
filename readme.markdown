@@ -1,7 +1,9 @@
 # Frill
 
+    NOTE: THIS GEM IS NOT YET RELEASED
+
 Simple decoration of objects for presentation. If you don't know what I'm talking
-about, reading up on presenters / decorators and their role in MVC.
+about, reading up on decorators and their role in MVC.
 
 Out of the box integration with Rails. 
 
@@ -98,7 +100,7 @@ In your html view, you simply call `@article.created_at`:
 
 The same goes for your JSON view.
 
-## Usage outside of Rails
+## Usage outside Rails
 
 There are really just two integrations in a Rails app: the `frill` 
 method inside of your controller, plus the ability to call 
