@@ -1,6 +1,7 @@
 module Frill
   def self.included(base)
     self.decorators << base
+    base.extend ClassMethods
   end
 
   def self.decorators
@@ -9,5 +10,25 @@ module Frill
 
   def self.reset!
     @decorators = nil
+  end
+
+  module ClassMethods
+    def before decorator
+      move Frill.decorators.index(decorator)
+    end
+
+    def after decorator
+      decorator.before self
+    end
+
+    def first
+      move 0
+    end
+
+    private
+    def move index
+      Frill.decorators.delete self
+      Frill.decorators.insert index, self
+    end
   end
 end

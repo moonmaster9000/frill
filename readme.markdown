@@ -58,7 +58,7 @@ require_relative 'timestamp_frill'
 
 module HtmlTimestampFrill
   include Frill
-  decorate after: TimestampFrill
+  after TimestampFrill
 
   def self.frill? object, context
     object.respond_to?(:created_at) && context.format == "html"
@@ -118,7 +118,7 @@ possible:
 ```ruby
 module ActionViewFrill
   include Frill
-  decorate before: :all 
+  first
 
   def helper
     @helper ||= Object.new.extend ActionView::Helpers
