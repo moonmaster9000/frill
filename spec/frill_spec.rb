@@ -17,6 +17,39 @@ describe Frill do
     end
   end
 
+  describe ".decorate" do
+    let(:object)         { double :object  }
+    let(:object_context) { double :object_context }
+    let(:eigenclass)     { (class << object; self; end) }
+
+    let!(:applicable_module) do
+      Module.new do
+        include Frill
+
+        def self.frill? object, context
+          true
+        end
+      end
+    end
+
+    let!(:unapplicable_module) do
+      Module.new do
+        include Frill
+
+        def self.frill? object, context
+          false
+        end
+      end
+    end
+
+    it "should decorate the object with any applicable modules" do
+      Frill.decorate object, object_context
+
+      eigenclass.included_modules.should include applicable_module
+      eigenclass.included_modules.should_not include unapplicable_module
+    end
+  end
+
   describe ".included" do
     let(:test_module) { double :module }
 

@@ -12,6 +12,12 @@ module Frill
     @decorators = nil
   end
 
+  def self.decorate object, context
+   decorators.each do |d|
+     object.extend d if d.frill? object, context
+   end
+  end
+
   module ClassMethods
     def before decorator
       move Frill.decorators.index(decorator)
