@@ -37,8 +37,7 @@ module TimestampFrill
   end
 
   def created_at
-    time = super
-    "#{time.year}/#{time.month}/#{time.day}"
+    super.strftime "%Y/%m/%d"
   end
 end
 ```
@@ -55,7 +54,7 @@ module HtmlTimestampFrill
   after TimestampFrill
 
   def self.frill? object, context
-    object.respond_to?(:created_at) && context.format == "html"
+    object.respond_to?(:created_at) && context.request.format == "text/html"
   end
 
   def created_at
