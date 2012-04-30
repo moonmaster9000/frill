@@ -1,7 +1,5 @@
 # Frill
 
-    NOTE: THIS GEM IS NOT YET RELEASED
-
 Simple decoration of objects for presentation. If you don't know what I'm talking
 about, reading up on decorators and their role in MVC.
 
@@ -14,10 +12,6 @@ Throw this in your Gemfile:
 ```ruby
 gem "frill"
 ```
-
-If you're placing this in a Rails app, run the following command: 
-
-    $ rails g frill:install
 
 ## Usage
 
@@ -56,8 +50,6 @@ to `created_at`.
 Next, let's create an `HtmlTimestampFrill` module:
 
 ```ruby
-require_relative 'timestamp_frill'
-
 module HtmlTimestampFrill
   include Frill
   after TimestampFrill
@@ -111,21 +103,6 @@ simply call `Frill.decorate`:
 
 ```ruby
 Frill.decorate my_object, my_context
-```
-
-If you want to replicate the `helper` behavior you get for free in a
-Rails app, consider how simple it was to make that `helper` method
-possible:
-
-```ruby
-module ActionViewFrill
-  include Frill
-  first
-
-  def helper
-    @helper ||= Object.new.extend ActionView::Helpers
-  end
-end
 ```
 
 ## License

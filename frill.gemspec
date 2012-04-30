@@ -6,6 +6,6 @@ Gem::Specification.new do |s|
   s.files      = Dir["lib/**/*"] << "VERSION" << "readme.markdown"
   s.test_files = Dir["spec/**/*"]
 
-  s.add_development_dependency "rails", "~> 3.2.2"
+  s.add_development_dependency "rails", "= 3.2.2"
   s.add_development_dependency "rspec"
 end

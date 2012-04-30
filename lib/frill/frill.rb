@@ -16,6 +16,8 @@ module Frill
    decorators.each do |d|
      object.extend d if d.frill? object, context
    end
+
+   object
   end
 
   module ClassMethods
