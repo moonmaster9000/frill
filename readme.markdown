@@ -22,7 +22,7 @@ below for information about how to use this outside of a Rails app.)
 Imagine you're creating a web application that includes both a
 JSON API and an HTML frontend, and you've decided to always present a
 timestamp as YEAR/MONTH/DAY. Furthermore, when presented in HTML, you
-always want your timestamps wrapped in `<bold>` tags.
+always want your timestamps wrapped in `<b>` tags.
 
 This is a perfect fit for the GoF decorator pattern.
 
