@@ -1,7 +1,7 @@
 # Frill
 
 Simple decoration of objects for presentation. If you don't know what I'm talking
-about, reading up on decorators and their role in MVC.
+about, read up on decorators and their role in MVC.
 
 Out of the box integration with Rails. 
 
