@@ -1,5 +1,7 @@
 # Frill
 
+[![Build Status](https://secure.travis-ci.org/moonmaster9000/frill.png)](http://travis-ci.org/moonmaster9000/frill)
+
 Simple decoration of objects for presentation. If you don't know what I'm talking
 about, read up on decorators and their role in MVC.
 
