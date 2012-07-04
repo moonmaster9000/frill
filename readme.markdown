@@ -1,6 +1,7 @@
 # Frill
 
 [![Build Status](https://secure.travis-ci.org/moonmaster9000/frill.png)](http://travis-ci.org/moonmaster9000/frill)
+[![Build Dependency Status](https://gemnasium.com/moonmaster9000/frill.png)](https://gemnasium.com/moonmaster9000/frill.png)
 
 Simple decoration of objects for presentation. If you don't know what I'm talking
 about, read up on decorators and their role in MVC.
