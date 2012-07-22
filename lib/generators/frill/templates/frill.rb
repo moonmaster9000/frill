@@ -20,9 +20,9 @@ module <%= class_name %>Frill
 
   # Decorate methods on `object`. 
   # If you want to use a view helper like `link_to` or a route helper like
-  # `root_path`, use the `helper` method to access them:
+  # `root_path`, use the `helpers` method (or its short alias, `h`) to access them:
   # def created_at
-  #   helper.content_tag :b, super 
+  #   h.content_tag :b, super
   # end
 end
 <% end -%>

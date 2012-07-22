@@ -4,19 +4,15 @@ module ViewContextFrill
 
   def self.frill? object, controller
     object.class_eval do
-      define_method :helper do
+      define_method :helpers do
         @frill_helper ||= controller.view_context
       end
 
       define_method :h do
-        helper
+        helpers
       end
 
-      define_method :helpers do
-        helper
-      end
-
-      private :helper, :h, :helpers
+      private :h, :helpers
     end
 
     false
