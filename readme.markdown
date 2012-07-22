@@ -57,7 +57,7 @@ module HtmlTimestampFrill
   after TimestampFrill
 
   def self.frill? object, context
-    object.respond_to?(:created_at) && context.request.format == "text/html"
+    object.respond_to?(:created_at) && context.request.format.html?
   end
 
   def created_at

@@ -5,11 +5,13 @@ module Frill
     config.autoload_paths << "app/frills"
 
     initializer "frill.rails_integration" do
-      require 'frill/rails'
+      ActiveSupport.on_load(:action_controller) do
+        require 'frill/rails'
+      end
     end
 
-    config.before_initialize do |app|
-      app.config.paths.add 'app/decorators', :eager_load => true
+    config.after_initialize do |app|
+      app.config.paths.add 'app/frills', :eager_load => true
     end
 
     config.to_prepare do
@@ -22,7 +24,7 @@ module Frill
     end
 
     def self.force_load files
-      files.each do |f| 
+      files.each do |f|
         require_dependency f
       end
     end

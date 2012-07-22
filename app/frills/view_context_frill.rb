@@ -7,6 +7,16 @@ module ViewContextFrill
       define_method :helper do
         @frill_helper ||= controller.view_context
       end
+
+      define_method :h do
+        helper
+      end
+
+      define_method :helpers do
+        helper
+      end
+
+      private :helper, :h, :helpers
     end
 
     false

@@ -3,10 +3,10 @@ module BoldTitleFrill
   after PrettyTitleFrill
 
   def self.frill? object, context
-    context.request.format == "text/html"
+    context.request.format.html?
   end
 
   def title
-    helper.content_tag :b, "#{super} #{helper.root_url}"
+    h.content_tag :b, "#{super} #{helpers.root_url}"
   end
 end

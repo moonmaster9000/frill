@@ -1,5 +1,9 @@
-class ActionController::Base
-  def frill object
-    Frill.decorate object, self
+module ActionController
+  class Base
+
+    private
+    def frill object
+      Frill.decorate object, self
+    end
   end
 end
