@@ -13,11 +13,11 @@ module Frill
   end
 
   def self.decorate object, context
-   decorators.each do |d|
-     object.extend d if d.frill? object, context
-   end
+    decorators.each do |d|
+      object.extend d if d.frill? object, context
+    end
 
-   object
+    object
   end
 
   module ClassMethods
