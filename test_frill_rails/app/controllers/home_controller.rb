@@ -5,4 +5,8 @@ class HomeController < ApplicationController
     @model = frill Model.new
     respond_with @model
   end
+
+  def associations
+    @model = Model.new
+  end
 end

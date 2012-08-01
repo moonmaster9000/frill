@@ -138,6 +138,31 @@ In your html view, you simply call `@article.created_at`:
 
 The same goes for your JSON view.
 
+### 'frill' decorates individual objects _and_ collections
+
+The `frill` helper will decorate both collections and associations. You can use it both within your controller
+and within your views.
+
+For example, inside a controller: 
+
+```ruby
+class PostsController < ApplicationController
+  def index
+    @posts = frill Post.all
+  end
+
+  def show
+    @post = frill Post.find(params[:id])
+  end
+end
+```
+
+Or, in a view:
+
+```erb
+<%= render frill(@post.comments) %>
+```
+
 ## Usage outside Rails
 
 There are really just two integrations in a Rails app: the `frill` 
