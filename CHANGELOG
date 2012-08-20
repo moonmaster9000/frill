@@ -1,0 +1,4 @@
+v0.1.2
+
+(Ben Moss & Nicholas Greenfield)
+Bug fix: multiple "after" uses could cause an ordering issue. 
