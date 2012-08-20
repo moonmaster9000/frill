@@ -61,33 +61,47 @@ describe Frill do
   end
 
   describe Frill::ClassMethods do
-    let(:module1) { Module.new { include Frill } }
-    let(:module2) { Module.new { include Frill } }
+    before do
+      module Module1
+        include Frill
+      end
+
+      module Module2
+        include Frill
+      end
+
+      module Module3
+        include Frill
+      end
+    end
 
     describe ".before" do
       it "inserts the current module before the requested module in Frill's list of decorators" do
-        Frill.decorators.should == [module1, module2]
+        Frill.decorators.should == [Module1, Module2, Module3]
 
-        module2.before module1
-        Frill.decorators.should == [module2, module1]
+        Module2.before Module1
+        Module3.before Module2
+        Frill.decorators.should == [Module3, Module2, Module1]
       end
     end
 
     describe ".after" do
       it "inserts the current module after the requested module in Frill's list of decorators" do
-        Frill.decorators.should == [module1, module2]
+        Frill.decorators.should == [Module1, Module2, Module3]
 
-        module1.after module2
-        Frill.decorators.should == [module2, module1]
+        Module2.after Module1
+        Module3.after Module1
+        Frill.decorators.first.should == Module1
+        Frill.decorators.last(2).should =~ [Module2, Module3]
       end
     end
 
     describe ".first" do
       it "inserts the current module at the beginning of the list of Frill's decorators" do
-        Frill.decorators.should == [module1, module2]
+        Frill.decorators.should == [Module1, Module2, Module3]
 
-        module2.first
-        Frill.decorators.should == [module2, module1]
+        Module2.first
+        Frill.decorators.first.should == Module2
       end
     end
   end
