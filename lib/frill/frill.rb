@@ -37,7 +37,7 @@ module Frill
     def move index
       Frill.decorators.delete self
       Frill.decorators.insert index, self
-      Frill.decorators.compact
+      Frill.decorators.compact!
     end
   end
 end
