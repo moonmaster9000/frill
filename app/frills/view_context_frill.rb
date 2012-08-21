@@ -1,6 +1,5 @@
 module ViewContextFrill
   include Frill
-  first
 
   def self.frill? object, controller
     object.class_eval do

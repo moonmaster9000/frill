@@ -112,8 +112,10 @@ end
 
 Two things to note: the `HtmlTimestampFrill` is only applicable to
 objects that have timestamps _when presented in "html"_. Also, we
-tell `Frill` to decorate after `TimestampFrill` is applied (so that
+tell `Frill` to decorate `after` `TimestampFrill` is applied (so that
 `super` in `created_at` returns our `TimestampFrill` response).
+
+Note that you can also specify decoration dependencies with `before` instead of `after`.
 
 Next, in our controller, we need to decorate our objects with frills:
 
