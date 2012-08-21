@@ -26,7 +26,7 @@ module Frill
     end
 
     def after decorator
-      move Frill.decorators.index(decorator) + 1
+      move(Frill.decorators.index(decorator) + 1)
     end
 
     def first
@@ -37,7 +37,7 @@ module Frill
     def move index
       Frill.decorators.delete self
       Frill.decorators.insert index, self
-      Frill.decorators.compact
+      Frill.decorators.compact!
     end
   end
 end

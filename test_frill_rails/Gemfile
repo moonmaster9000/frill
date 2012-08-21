@@ -1,8 +1,12 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 3.2.2'
+gem 'rails'
 
 gem 'frill', path: '../'
+
+group :development, :test do
+  gem 'pry'
+end
 
 group :test do
   gem 'rspec-rails', '~> 2.8.0'

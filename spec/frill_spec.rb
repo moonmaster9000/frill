@@ -89,10 +89,10 @@ describe Frill do
       it "inserts the current module after the requested module in Frill's list of decorators" do
         Frill.decorators.should == [Module1, Module2, Module3]
 
-        Module2.after Module1
-        Module3.after Module1
-        Frill.decorators.first.should == Module1
-        Frill.decorators.last(2).should =~ [Module2, Module3]
+        Module1.after Module2
+        Module3.after Module2
+        Frill.decorators.first.should == Module2
+        Frill.decorators.last(2).should =~ [Module1, Module3]
       end
     end
 
