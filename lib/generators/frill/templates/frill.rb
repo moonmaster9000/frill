@@ -6,8 +6,6 @@ module <%= class_name %>Frill
   #   after SomeFrill
   # or...
   #   before SomeFrill
-  # or...
-  #   first
 
   # frill? tells Frill when to decorate an object with this module.
   # If you're decorating within a controller action via the `frill`
