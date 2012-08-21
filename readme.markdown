@@ -176,6 +176,11 @@ simply call `Frill.decorate`:
 Frill.decorate my_object, my_context
 ```
 
+## Contributors
+
+Ben Moss
+Nicholas Greenfield
+
 ## License
 
 (The MIT License)
