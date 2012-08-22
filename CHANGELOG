@@ -1,3 +1,7 @@
+v0.1.6
+
+Internal refactoring. No new functionality. 
+
 v0.1.5
 
 Bug fix: before/after failed to work correctly when joining two distinct
