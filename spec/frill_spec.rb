@@ -71,12 +71,12 @@ describe Frill do
 
     describe ".before" do
       it "inserts the current module before the requested module in Frill's list of decorators" do
-        Module5.before Module4
-        Module4.before Module3
-        Module3.before Module2
         Module2.before Module1
+        Module5.after Module4
+        Module3.before Module2
+        Module4.before Module3
 
-        Frill.decorators.index(Module5).should be < Frill.decorators.index(Module4)
+        Frill.decorators.index(Module5).should be > Frill.decorators.index(Module4)
         Frill.decorators.index(Module3).should be < Frill.decorators.index(Module2)
         Frill.decorators.index(Module2).should be < Frill.decorators.index(Module1)
         Frill.decorators.index(Module4).should be < Frill.decorators.index(Module3)
@@ -93,33 +93,33 @@ describe Frill do
 
     describe ".before" do
       it "inserts the current module before the requested module in Frill's list of decorators" do
-        Frill.decorators.sorted_nodes.should == [Module1, Module2, Module3]
+        Frill.decorators.should == [Module1, Module2, Module3]
 
         Module1.before Module2
-        Frill.decorators.sorted_nodes.should == [Module1, Module2, Module3]
+        Frill.decorators.should == [Module1, Module2, Module3]
 
         Module3.before Module2
-        Frill.decorators.sorted_nodes.should == [Module3, Module1, Module2]
+        Frill.decorators.should == [Module3, Module1, Module2]
       end
     end
 
     describe ".after" do
       it "inserts the current module after the requested module in Frill's list of decorators" do
-        Frill.decorators.sorted_nodes.should == [Module1, Module2, Module3]
+        Frill.decorators.should == [Module1, Module2, Module3]
 
         Module1.after Module2
         Module3.after Module2
 
-        Frill.decorators.sorted_nodes.first.should == Module2
-        Frill.decorators.sorted_nodes.last(2).should =~ [Module1, Module3]
+        Frill.decorators.first.should == Module2
+        Frill.decorators.last(2).should =~ [Module1, Module3]
       end
     end
   end
 
-  describe Frill::Graph do 
+  describe Frill::List do 
     describe "#add" do
-      it "should add an element to the graph" do
-        g = Frill::Graph.new
+      it "should add an element to the list" do
+        g = Frill::List.new
         g.add "hi"
         g["hi"].should_not be_nil
       end
@@ -127,17 +127,28 @@ describe Frill do
 
     describe "#move_before(label1, label2)" do
       it "should move label1 before label2" do
-        g = Frill::Graph.new
+        g = Frill::List.new
         g.move_before "a", "b"
-        g.sorted_nodes.should == ["a", "b"]
+        g.move_before "c", "d"
+        g.move_after  "b", "c"
+        g.to_a.should == ["c", "d", "a", "b"]
       end
     end
 
     describe "#move_after(label1, label2)" do
       it "should move label1 after label2" do
-        g = Frill::Graph.new
+        g = Frill::List.new
         g.move_after "a", "b"
-        g.sorted_nodes.should == ["b", "a"]
+        g.to_a.should == ["b", "a"]
+      end
+
+      it "should throw exceptions when cycles are detected" do
+        g = Frill::List.new
+        g.move_before "b", "a"
+
+        expect { 
+          g.move_before "a", "b"
+        }.to raise_exception(Frill::CyclicDependency)
       end
     end
   end

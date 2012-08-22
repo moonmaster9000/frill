@@ -1,36 +1,42 @@
 module Frill
+  class CyclicDependency < RuntimeError; end
+
   def self.included(base)
-    self.decorators.add base
+    self.list.add base
     base.extend ClassMethods
   end
 
   def self.decorators
-    @decorators ||= Graph.new
+    list.to_a
   end
 
   def self.reset!
-    @decorators = nil
+    @list = nil
   end
 
   def self.decorate object, context
-   decorators.sorted_nodes.each do |d|
+   decorators.each do |d|
      object.extend d if d.frill? object, context
    end
 
    object
   end
 
+  def self.list
+    @list ||= List.new
+  end
+
   module ClassMethods
     def before decorator
-      Frill.decorators.move_before self, decorator
+      Frill.list.move_before self, decorator
     end
 
     def after decorator
-      Frill.decorators.move_after self, decorator
+      Frill.list.move_after self, decorator
     end
   end
 
-  class Graph
+  class List
     def initialize
       @nodes = {}
     end
@@ -44,6 +50,8 @@ module Frill
       node2 = add label2
 
       node1.move_before node2
+
+      detect_cycles
     end
 
     def move_after label1, label2
@@ -51,6 +59,8 @@ module Frill
       node2 = add label2
 
       node1.move_after node2
+
+      detect_cycles
     end
 
     def [](label)
@@ -66,53 +76,78 @@ module Frill
     end
 
     def index label
-      sorted_nodes.index label
+      to_a.index label
     end
 
-    def sorted_nodes
+    def to_a
       lists = []
 
       @nodes.values.each do |node|
         unless lists.include? node.label
-          leaf = node.leaf
-          lists += leaf.to_a
+          first = node.first
+          lists += first.to_a
         end
       end
 
       lists
     end
 
+    private
+
+    def detect_cycles
+      @nodes.values.each do |node|
+        visited = {}
+        visited[node.label] = true
+
+        current_node = node.next
+        while current_node
+          raise Frill::CyclicDependency if visited[current_node.label]
+          visited[current_node.label] = true
+          current_node = current_node.next
+        end
+
+        current_node = node.previous
+        while current_node
+          raise Frill::CyclicDependency if visited[current_node.label]
+          visited[current_node.label] = true
+          current_node = current_node.previous
+        end
+      end
+    end
+
     class Node
-      attr_accessor :parent, :child
+      attr_accessor :next, :previous
       attr_reader :label
 
       def initialize(label)
         @label  = label
-        @parent = nil
-        @child  = nil
+        @next = nil
+        @previous  = nil
       end
 
       def move_before node
-        parent_node = node.leaf
+        next_node = node.first
+        previous_node = self.last
 
-        parent_node.child = self
-        self.parent = parent_node
+        previous_node.next = next_node
+        next_node.previous = previous_node
       end
 
       def move_after node
-        child_node = node.root
+        previous_node = node.last
+        first_node  = first
 
-        self.child = child_node
-        child.parent = self
+        previous_node.next = first_node
+        first_node.previous   = previous_node
       end
 
-      def leaf
+      def first
         node = nil
         current_node = self
 
         until node
-          if current_node.child
-            current_node = current_node.child
+          if current_node.previous
+            current_node = current_node.previous
           else
             node = current_node
           end
@@ -121,19 +156,19 @@ module Frill
         node
       end
 
-      def root
+      def last
         current_node = self
-        root_node = nil
+        last_node = nil
 
-        until root_node
-          if current_node.parent
-            current_node = current_node.parent
+        until last_node
+          if current_node.next
+            current_node = current_node.next
           else
-            root_node = current_node
+            last_node = current_node
           end
         end
 
-        root_node
+        last_node
       end
 
       def to_a
@@ -143,7 +178,7 @@ module Frill
 
         until current_node == nil
           list << current_node.label
-          current_node = current_node.parent
+          current_node = current_node.next
         end
 
         list
