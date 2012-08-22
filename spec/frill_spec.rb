@@ -130,16 +130,8 @@ describe Frill do
         g = Frill::List.new
         g.move_before "a", "b"
         g.move_before "c", "d"
-        g.move_after  "b", "c"
+        g.move_before "c", "b"
         g.to_a.should == ["c", "d", "a", "b"]
-      end
-    end
-
-    describe "#move_after(label1, label2)" do
-      it "should move label1 after label2" do
-        g = Frill::List.new
-        g.move_after "a", "b"
-        g.to_a.should == ["b", "a"]
       end
 
       it "should throw exceptions when cycles are detected" do

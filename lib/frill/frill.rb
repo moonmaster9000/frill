@@ -32,7 +32,7 @@ module Frill
     end
 
     def after decorator
-      Frill.list.move_after self, decorator
+      Frill.list.move_before decorator, self
     end
   end
 
@@ -50,15 +50,6 @@ module Frill
       node2 = add label2
 
       node1.move_before node2
-
-      detect_cycles
-    end
-
-    def move_after label1, label2
-      node1 = add label1
-      node2 = add label2
-
-      node1.move_after node2
 
       detect_cycles
     end
@@ -131,14 +122,6 @@ module Frill
 
         previous_node.next = next_node
         next_node.previous = previous_node
-      end
-
-      def move_after node
-        previous_node = node.last
-        first_node  = first
-
-        previous_node.next = first_node
-        first_node.previous   = previous_node
       end
 
       def first
