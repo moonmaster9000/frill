@@ -180,8 +180,8 @@ Frill.decorate my_object, my_context
 
 ## Contributors
 
-Ben Moss
-Nicholas Greenfield
+* Ben Moss
+* Nicholas Greenfield
 
 ## License
 
