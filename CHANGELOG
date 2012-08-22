@@ -1,3 +1,8 @@
+v0.1.5
+
+Bug fix: before/after failed to work correctly when joining two distinct
+dependency lists.
+
 v0.1.4
 
 Bug fix: multiple before and after uses could still cause an ordering issue.
