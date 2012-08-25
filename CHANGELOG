@@ -1,3 +1,8 @@
+v0.1.9
+
+Automatically frill all of your controller instance variables via the
+`auto_frill` class method.
+
 v0.1.8
 
 Your frill dependency graph is now memoized on first access, instead of being recomputed
