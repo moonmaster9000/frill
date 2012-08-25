@@ -1,3 +1,8 @@
+v0.1.8
+
+Your frill dependency graph is now memoized on first access, instead of being recomputed
+every time you frill.
+
 v0.1.7
 
 LICENSE file now distributed with gem.
