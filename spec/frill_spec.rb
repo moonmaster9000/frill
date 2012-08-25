@@ -71,10 +71,10 @@ describe Frill do
 
     describe ".before" do
       it "inserts the current module before the requested module in Frill's list of decorators" do
+        Module4.before Module3
         Module2.before Module1
         Module5.after Module4
         Module3.before Module2
-        Module4.before Module3
 
         Frill.decorators.index(Module5).should be > Frill.decorators.index(Module4)
         Frill.decorators.index(Module3).should be < Frill.decorators.index(Module2)
@@ -93,19 +93,19 @@ describe Frill do
 
     describe ".before" do
       it "inserts the current module before the requested module in Frill's list of decorators" do
-        Frill.decorators.should == [Module1, Module2, Module3]
+        Frill.list.to_a.should == [Module1, Module2, Module3]
 
         Module1.before Module2
-        Frill.decorators.should == [Module1, Module2, Module3]
+        Frill.list.to_a.should == [Module1, Module2, Module3]
 
         Module3.before Module2
-        Frill.decorators.should == [Module3, Module1, Module2]
+        Frill.list.to_a.should == [Module3, Module1, Module2]
       end
     end
 
     describe ".after" do
       it "inserts the current module after the requested module in Frill's list of decorators" do
-        Frill.decorators.should == [Module1, Module2, Module3]
+        Frill.list.to_a.should == [Module1, Module2, Module3]
 
         Module1.after Module2
         Module3.after Module2
@@ -136,10 +136,11 @@ describe Frill do
 
       it "should throw exceptions when cycles are detected" do
         g = Frill::List.new
+        g.move_before "c", "b"
         g.move_before "b", "a"
 
         expect { 
-          g.move_before "a", "b"
+          g.move_before "a", "c"
         }.to raise_exception(Frill::CyclicDependency)
       end
     end

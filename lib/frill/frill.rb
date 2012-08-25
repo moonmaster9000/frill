@@ -42,7 +42,7 @@ module Frill
     end
 
     def add label
-      @nodes[label] ||= Node.new label
+      nodes[label] ||= Node.new label
     end
 
     def move_before label1, label2
@@ -51,19 +51,19 @@ module Frill
 
       node1.move_before node2
 
-      detect_cycles
+      CycleDetecter.detect! nodes
     end
 
     def [](label)
-      @nodes[label]
+      nodes[label]
     end
 
     def empty?
-      @nodes.empty?
+      nodes.empty?
     end
 
     def include? label
-      @nodes.keys.include? label
+      nodes[label]
     end
 
     def index label
@@ -71,37 +71,65 @@ module Frill
     end
 
     def to_a
-      lists = []
+      array = []
 
-      @nodes.values.each do |node|
-        unless lists.include? node.label
-          first = node.first
-          lists += first.to_a
-        end
+      nodes.values.each do |node|
+        array += construct_array(node) unless array.include? node.label
       end
 
-      lists
+      array
     end
 
     private
+    attr_reader :nodes
 
-    def detect_cycles
-      @nodes.values.each do |node|
-        visited = {}
+    def construct_array node
+      array = []
+      current_node = node.first
+
+      while current_node
+        array << current_node.label
+        current_node = current_node.next
+      end
+
+      array
+    end
+
+    class CycleDetecter
+      def self.detect! nodes
+        new(nodes).detect!
+      end
+
+      def initialize(nodes)
+        @nodes = nodes
+        @visited = {}
+      end
+
+      def detect!
+        nodes.values.each do |node|
+          fan_out node unless visited[node.label]
+        end
+      end
+
+
+      private
+
+      attr_reader :nodes, :visited
+
+      def fan_out(node)
         visited[node.label] = true
 
-        current_node = node.next
-        while current_node
-          raise Frill::CyclicDependency if visited[current_node.label]
-          visited[current_node.label] = true
-          current_node = current_node.next
-        end
+        fan :next, node
+        fan :previous, node
+      end
 
-        current_node = node.previous
+      def fan(direction, start_node)
+        current_node = start_node.send direction
+
         while current_node
           raise Frill::CyclicDependency if visited[current_node.label]
           visited[current_node.label] = true
-          current_node = current_node.previous
+          current_node = current_node.send direction
         end
       end
     end
@@ -125,46 +153,15 @@ module Frill
       end
 
       def first
-        node = nil
-        current_node = self
-
-        until node
-          if current_node.previous
-            current_node = current_node.previous
-          else
-            node = current_node
-          end
-        end
-
-        node
+        first_node = self
+        first_node = first_node.previous while first_node.previous
+        first_node
       end
 
       def last
-        current_node = self
-        last_node = nil
-
-        until last_node
-          if current_node.next
-            current_node = current_node.next
-          else
-            last_node = current_node
-          end
-        end
-
+        last_node = self
+        last_node = last_node.next while last_node.next
         last_node
-      end
-
-      def to_a
-        current_node = self
-
-        list = []
-
-        until current_node == nil
-          list << current_node.label
-          current_node = current_node.next
-        end
-
-        list
       end
     end
   end
