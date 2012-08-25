@@ -158,6 +158,7 @@ class ArticlesController < ApplicationController
     @article = frill Article.find(params[:id])
     respond_with @article
   end
+end
 ```
 
 And that's it. You don't have to update any of your views. Why? When you call the `frill` method inside your controller and pass it an object (or a collection of objects), 
@@ -165,6 +166,28 @@ frill will attempt to extend the object with any applicable frills (i.e., frills
 
 That way, you can simple render your `created_at` attributes without any helpers, and they will automatically present themselves appropriately for their context (e.g., HTML v. JSON requests).
 
+Note that if prefer, you can configure your controllers to automatically frill all objects for presentation by calling the `auto_frill` method inside your `ApplicationController`, instead of manually having to opt them it via the `frill` method:
+
+```ruby
+class ApplicationController < ActionController::Base
+  auto_frill
+end
+```
+
+Now, you could remove the `frill` from your `ArticlesController`:
+
+```ruby
+class ArticlesController < ApplicationController
+  respond_to :json, :html
+
+  def show
+    @article = Article.find(params[:id])
+    respond_with @article
+  end
+end
+```
+
+Now, any instance variables you create in your controllers will be automatically frilled before handed off to your views.
 
 ### 'frill' decorates individual objects _and_ collections
 

@@ -10,4 +10,9 @@ describe 'Frill integration' do
     visit associations_path
     page.should have_content "Decorated Title"
   end
+
+  it "should let you opt in to automatic frilling by using the auto_frill method in a controller" do
+    visit auto_frill_path
+    page.should have_content "Decorated Title"
+  end
 end
