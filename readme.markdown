@@ -95,7 +95,7 @@ module ApplicationHelper
 end
 ```
 
-And now you begin the tedious track of updating all of the JSON views with the helper:
+And now you begin the tedious task of updating all of the JSON views with the helper:
 
 ```ruby
 json.created_at format_timestamp(@article.created_at)
@@ -164,7 +164,7 @@ end
 And that's it. You don't have to update any of your views. Why? When you call the `frill` method inside your controller and pass it an object (or a collection of objects), 
 frill will attempt to extend the object with any applicable frills (i.e., frills that return `true` for the `frill?` method when passed the object and the request context).
 
-That way, you can simple render your `created_at` attributes without any helpers, and they will automatically present themselves appropriately for their context (e.g., HTML v. JSON requests).
+That way, you can simply render your `created_at` attributes without any helpers, and they will automatically present themselves appropriately for their context (e.g., HTML v. JSON requests).
 
 Note that if prefer, you can configure your controllers to automatically frill all objects for presentation by calling the `auto_frill` method inside your `ApplicationController`, instead of manually having to opt them it via the `frill` method:
 
