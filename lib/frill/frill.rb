@@ -7,10 +7,11 @@ module Frill
   end
 
   def self.decorators
-    list.to_a
+    @decorators ||= list.to_a
   end
 
   def self.reset!
+    @decorators = nil
     @list = nil
   end
 
