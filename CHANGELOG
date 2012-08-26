@@ -1,3 +1,7 @@
+v0.1.10
+
+Add "MIT" license to gem specification.
+
 v0.1.9
 
 Automatically frill all of your controller instance variables via the
