@@ -32,7 +32,7 @@ module FooFrill
   end
 
   def foo
-    h.render partial: "shared/foo", locals { foo: "#{super} bar" }
+    h.render partial: "shared/foo", locals: { foo: "#{super} bar" }
   end
 end
 ```
