@@ -14,16 +14,67 @@ Throw this in your Gemfile:
 gem "frill"
 ```
 
-Generate a frill:
+## In a nutshell
+
+Decorate your objects for presentation. 
 
 ```sh
-$ rails g frill Timestamp --test-framework=rspec
-      create  app/frills/timestamp_frill.rb
-      invoke  rspec
-      create    spec/frills/timestamp_frill_spec.rb
+$ rails g frill FooFrill
 ```
 
-## Refactoring timestamp helpers with decorators
+Frills are just modules that decorate your objects with extra functionality. The `frill?` method on the module tells `Frill` when
+to decorate an object with a module:
+
+```ruby
+module FooFrill
+  def self.frill? object, context
+    object.respond_to?(:foo)
+  end
+
+  def foo
+    "#{super} bar"
+  end
+end
+```
+
+Opt objects in your controllers into frill with the `frill` method:
+
+```ruby
+class FooController < ApplicationController
+  def foo
+    @foo = frill Foo.find(params[:id])
+  end
+end
+```
+
+Then just use the `foo` method on your Foo objects to get their decorated functionality:
+
+```erb
+Awesome foo page!
+
+<%=@foo.foo%>
+```
+
+Instead of manually opting objects into decoration via the `frill` method, you can have all of your controller
+instance variables automatically decorated via the `auto_frill` macro:
+
+```ruby
+class ApplicationController < ActionController::Base
+  auto_frill
+end
+```
+
+Now you don't need to use the `frill` method to decorate objects. They'll be automatically decorated before being passed off to your view.
+
+```ruby
+class FooController < ApplicationController
+  def foo
+    @foo = Foo.find params[:id]
+  end
+end
+```
+
+## A longer story
 
 Your product manager writes the following story for you: 
 
@@ -39,7 +90,7 @@ Feature: Consistent Timestamp Presentation
 ```
 
 You see this and roll your eyes. You're thinking about all of the places that you show `created_at` 
-timestamps on the site. Regardless you roll up your sleeves and start by writing the following helper and partial:
+timestamps on the site. Reluctantly, you roll up your sleeves and start by writing the following helper and partial:
 
 ```ruby
 module ApplicationHelper
@@ -64,7 +115,7 @@ You hate this approach.
 
 1. It's tedious
 1. It's procedural
-1. Developers have to remember to manually wrap timestamps with your `format_timestamp` helper. Developers suck at remembering things like that. FACEPALM
+1. Developers have to remember to manually wrap timestamps with your `format_timestamp` helper. 
 
 After you deliver the story, your product owner says "Great! But what about the format of timestamps in the JSON api? Here's another story."
 
@@ -216,9 +267,9 @@ Or, in a view:
 
 ## Usage outside Rails
 
-There are really just two integrations in a Rails app: the `frill` 
-method inside of your controller, plus the ability to call 
-helper methods inside of your module methods.
+There are really just three integrations in a Rails app: the `frill` 
+method inside of your controller, the `auto_frill` macro for controllers, 
+plus the ability to call view helper methods inside of your module methods.
 
 To kickoff the decoration of an object outside of a Rails application,
 simply call `Frill.decorate`:
@@ -231,3 +282,7 @@ Frill.decorate my_object, my_context
 
 * Ben Moss
 * Nicholas Greenfield
+
+## License
+
+MIT
