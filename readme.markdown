@@ -32,10 +32,13 @@ module FooFrill
   end
 
   def foo
-    h.render partial: "shared/foo", locals: { foo: "#{super} bar" }
+    h.content_tag :b, "#{super} bar"
   end
 end
 ```
+
+The `h` method gives you access to all of the view helpers you would normally expect to use inside a view or a helper.
+It's aliased to `helpers`, so feel free to use either.
 
 Opt objects in your controllers into frill with the `frill` method:
 
@@ -64,7 +67,8 @@ class ApplicationController < ActionController::Base
 end
 ```
 
-Now you don't need to use the `frill` method to decorate objects. They'll be automatically decorated before being passed off to your view.
+Now you don't need to use the `frill` method to decorate objects. They'll be automatically decorated 
+before being passed off to your view.
 
 ```ruby
 class FooController < ApplicationController
@@ -81,12 +85,12 @@ Your product manager writes the following story for you:
 ```cucumber
 Feature: Consistent Timestamp Presentation
   As a user
-  I want "created at" timestamps presented in a uniform way on the site
+  I want "created at" timestamps presented in a uniform, localized way on the site
   So that I can easily discover the age of content on the site
 
   Scenario: Presenting timestamps
     When I navigate to a page that displays a created_at timestamp
-    Then I should see that timestamp marked up as bold and formatted as follows: YYYY/MM/DD
+    Then I should see that timestamp marked up as bold and formatted for the client's locale as follows: Month DD, YYYY HH:MM 
 ```
 
 You see this and roll your eyes. You're thinking about all of the places that you show `created_at` 
@@ -95,7 +99,7 @@ timestamps on the site. Reluctantly, you roll up your sleeves and start by writi
 ```ruby
 module ApplicationHelper
   def format_timestamp(t)
-    render partial: "shared/timestamp", locals: { time: t.strftime "%Y/%m/%d" }
+    render partial: "shared/timestamp", locals: { time: l(t, format: :long) }
   end
 end
 ```
@@ -135,7 +139,7 @@ You attempt to salvage the helper, updating it with concerns for the JSON format
 ```ruby
 module ApplicationHelper
   def format_timestamp(t)
-    time = t.strftime "%Y/%m/%d" 
+    time = l t, format: :long 
 
     if request.format.html?
       render partial: "shared/timestamp", locals: { time: time }
@@ -167,13 +171,15 @@ module TimestampFrill
   end
 
   def created_at
-    super.strftime "%Y/%m/%d"
+    helpers.l super, format: :long
   end
 end
 ```
 
 The `frill?` method tells `Frill` when to extend an object with this module. Then we redefine the `created_at` method, 
-calling super and then formatting the date returned with `strftime`.
+calling super and then formatting the date with the rails localization helper `l`. The `helpers` method is made available to 
+frill'ed objects; it contains the same view context that you have access to inside of views and inside of helper methods. 
+You can use the `h` method as well - it's simply an alias for `helpers`.
 
 Simple enough. 
 
@@ -194,13 +200,17 @@ module HtmlTimestampFrill
 end
 ```
 
+```erb
+<b><%=time%></b>
+```
+
 There's three important things to note: 
 
 1. This frill comes after `TimestampFrill`. That tells `Frill` that it should only attempt to extend an object with this module after attempting to extend it with `TimestampFrill`.
 1. The `frill?` method only returns true if it's an HTML request, meaning this frill won't be extended onto objects for your JSON api.
 1. The `h` method gives you access to all of the normal view helper methods you expect to you use inside your views. You can also use `helpers`.
 
-Lastly, opt objects into frilling inside your controllers: 
+Lastly, opt objects into frilling inside your controllers by using the `frill` method: 
 
 ```ruby
 class ArticlesController < ApplicationController
@@ -218,7 +228,7 @@ frill will attempt to extend the object with any applicable frills (i.e., frills
 
 That way, you can simply render your `created_at` attributes without any helpers, and they will automatically present themselves appropriately for their context (e.g., HTML v. JSON requests).
 
-Note that if prefer, you can configure your controllers to automatically frill all objects for presentation by calling the `auto_frill` method inside your `ApplicationController`, instead of manually having to opt them it via the `frill` method:
+Note that if you prefer, you can configure your controllers to automatically frill all objects for presentation by calling the `auto_frill` method inside your `ApplicationController`, instead of manually having to opt them it via the `frill` method:
 
 ```ruby
 class ApplicationController < ActionController::Base
@@ -265,6 +275,80 @@ Or, in a view:
 ```erb
 <%= render frill(@post.comments) %>
 ```
+
+## Testing
+
+Since frills are just modules, it's possible to test your frills in relative isolation.
+
+```ruby
+require 'spec_helper'
+
+describe TimestampFrill do
+  let(:object) do
+    double :object, 
+      created_at: DateTime.new(2012, 1, 1),
+      h: ApplicationController.new.view_context
+  end
+
+  subject { object.extend TimestampFrill }
+
+  its(:created_at) { should == "January 01, 2012 00:00" }
+end
+```
+
+When it comes to view methods that render partials, etc., you could choose to test them with integration:
+
+```ruby
+require 'spec_helper'                                                     
+
+class SomeModel
+  def h 
+    @view_context ||= ApplicationController.new.view_context
+  end
+
+  def created_at
+     Time.new(2012,1,1)
+  end
+end   
+
+describe HtmlTimestampFrill do                                            
+  let(:object) { SomeModel.new.extend TimestampFrill }
+
+  subject { object.extend HtmlTimestampFrill }     
+  
+  describe "#created_at" do
+    it "should render the timestamp partial" do
+      subject.created_at.strip.should == "<b>January 01, 2012 00:00</b>"
+    end
+  end
+end
+```
+
+Or you could test them by stubbing out the view context, and simply setting up expectations on them:
+
+```ruby
+require 'spec_helper'
+
+class SomeModel
+  def h; end
+  def created_at; end
+end
+  
+describe HtmlTimestampFrill do                                            
+  let(:object) { SomeModel.new }
+  
+  subject { object.extend HtmlTimestampFrill }
+  
+  describe "#created_at" do                                               
+    it "should render the timestamp partial" do
+      subject.h.should_receive(:render)
+      subject.created_at
+    end
+  end
+end
+```
+
+The latter can be nice if you're really just interested in testing conditional logic inside your decoration.
 
 ## Usage outside Rails
 
