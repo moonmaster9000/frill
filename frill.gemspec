@@ -7,6 +7,7 @@ Gem::Specification.new do |s|
   s.files      = Dir["lib/**/*"] + Dir["app/**/*"] << "VERSION" << "readme.markdown" << "LICENSE"
   s.test_files = Dir["spec/**/*"]
   s.summary    = "Decorating objects for presentation. Supports Rails out of the box."
+  s.license    = "MIT"
 
   s.add_development_dependency "rails", "~> 3.2.2"
 
