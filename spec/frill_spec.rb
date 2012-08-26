@@ -70,7 +70,7 @@ describe Frill do
     end
 
     describe ".before" do
-      it "inserts the current module before the requested module in Frill's list of decorators" do
+      it "inserts the current module before the requested module in Frill's dependency_graph of decorators" do
         Module4.before Module3
         Module2.before Module1
         Module5.after Module4
@@ -92,20 +92,20 @@ describe Frill do
     end
 
     describe ".before" do
-      it "inserts the current module before the requested module in Frill's list of decorators" do
-        Frill.list.to_a.should == [Module1, Module2, Module3]
+      it "inserts the current module before the requested module in Frill's dependency_graph of decorators" do
+        Frill.dependency_graph.to_a.should == [Module1, Module2, Module3]
 
         Module1.before Module2
-        Frill.list.to_a.should == [Module1, Module2, Module3]
+        Frill.dependency_graph.to_a.should == [Module1, Module2, Module3]
 
         Module3.before Module2
-        Frill.list.to_a.should == [Module3, Module1, Module2]
+        Frill.dependency_graph.to_a.should == [Module3, Module1, Module2]
       end
     end
 
     describe ".after" do
-      it "inserts the current module after the requested module in Frill's list of decorators" do
-        Frill.list.to_a.should == [Module1, Module2, Module3]
+      it "inserts the current module after the requested module in Frill's dependency_graph of decorators" do
+        Frill.dependency_graph.to_a.should == [Module1, Module2, Module3]
 
         Module1.after Module2
         Module3.after Module2
@@ -116,10 +116,10 @@ describe Frill do
     end
   end
 
-  describe Frill::List do 
+  describe Frill::DependencyGraph do 
     describe "#add" do
-      it "should add an element to the list" do
-        g = Frill::List.new
+      it "should add an element to the dependency_graph" do
+        g = Frill::DependencyGraph.new
         g.add "hi"
         g["hi"].should_not be_nil
       end
@@ -127,7 +127,7 @@ describe Frill do
 
     describe "#move_before(label1, label2)" do
       it "should move label1 before label2" do
-        g = Frill::List.new
+        g = Frill::DependencyGraph.new
         g.move_before "a", "b"
         g.move_before "c", "d"
         g.move_before "c", "b"
@@ -135,7 +135,7 @@ describe Frill do
       end
 
       it "should throw exceptions when cycles are detected" do
-        g = Frill::List.new
+        g = Frill::DependencyGraph.new
         g.move_before "c", "b"
         g.move_before "b", "a"
 

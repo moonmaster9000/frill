@@ -2,17 +2,17 @@ module Frill
   class CyclicDependency < RuntimeError; end
 
   def self.included(base)
-    self.list.add base
+    self.dependency_graph.add base
     base.extend ClassMethods
   end
 
   def self.decorators
-    @decorators ||= list.to_a
+    @decorators ||= dependency_graph.to_a
   end
 
   def self.reset!
     @decorators = nil
-    @list = nil
+    @dependency_graph = nil
   end
 
   def self.decorate object, context
@@ -23,21 +23,21 @@ module Frill
    object
   end
 
-  def self.list
-    @list ||= List.new
+  def self.dependency_graph
+    @dependency_graph ||= DependencyGraph.new
   end
 
   module ClassMethods
     def before decorator
-      Frill.list.move_before self, decorator
+      Frill.dependency_graph.move_before self, decorator
     end
 
     def after decorator
-      Frill.list.move_before decorator, self
+      Frill.dependency_graph.move_before decorator, self
     end
   end
 
-  class List
+  class DependencyGraph
     def initialize
       @nodes = {}
     end
