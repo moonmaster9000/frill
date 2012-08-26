@@ -32,7 +32,7 @@ module FooFrill
   end
 
   def foo
-    "#{super} bar"
+    h.render partial: "shared/foo", locals { foo: "#{super} bar" }
   end
 end
 ```
@@ -194,10 +194,11 @@ module HtmlTimestampFrill
 end
 ```
 
-There's two important things to note: 
+There's three important things to note: 
 
 1. This frill comes after `TimestampFrill`. That tells `Frill` that it should only attempt to extend an object with this module after attempting to extend it with `TimestampFrill`.
 1. The `frill?` method only returns true if it's an HTML request, meaning this frill won't be extended onto objects for your JSON api.
+1. The `h` method gives you access to all of the normal view helper methods you expect to you use inside your views. You can also use `helpers`.
 
 Lastly, opt objects into frilling inside your controllers: 
 
