@@ -1,7 +1,7 @@
 module Frill
   class CyclicDependency < RuntimeError; end
 
-  def self.included(base)
+  def self.included base
     self.dependency_graph.add base
     base.extend ClassMethods
   end
@@ -101,7 +101,7 @@ module Frill
         new(nodes).detect!
       end
 
-      def initialize(nodes)
+      def initialize nodes
         @nodes = nodes
         @visited = {}
       end
@@ -112,19 +112,17 @@ module Frill
         end
       end
 
-
       private
-
       attr_reader :nodes, :visited
 
-      def fan_out(node)
+      def fan_out node
         visited[node.label] = true
 
         fan :next, node
         fan :previous, node
       end
 
-      def fan(direction, start_node)
+      def fan direction, start_node
         current_node = start_node.send direction
 
         while current_node
