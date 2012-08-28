@@ -78,6 +78,31 @@ class FooController < ApplicationController
 end
 ```
 
+### 'frill' decorates individual objects _and_ collections
+
+The `frill` helper will decorate both single objects and collections of objects. You can use it both within your controller
+and within your views.
+
+For example, inside a controller: 
+
+```ruby
+class FoosController < ApplicationController
+  def index
+    @foos = frill Foo.all
+  end
+
+  def show
+    @foo = frill Foo.find(params[:id])
+  end
+end
+```
+
+Or, in a view:
+
+```erb
+<%= render frill(@foo.comments) %>
+```
+
 ## A longer story
 
 Your product manager writes the following story for you: 
@@ -251,30 +276,7 @@ end
 
 Now, any instance variables you create in your controllers will be automatically frilled before handed off to your views.
 
-### 'frill' decorates individual objects _and_ collections
 
-As I've hinted at, the `frill` helper will decorate both single objects and collections of objects. You can use it both within your controller
-and within your views.
-
-For example, inside a controller: 
-
-```ruby
-class PostsController < ApplicationController
-  def index
-    @posts = frill Post.all
-  end
-
-  def show
-    @post = frill Post.find(params[:id])
-  end
-end
-```
-
-Or, in a view:
-
-```erb
-<%= render frill(@post.comments) %>
-```
 
 ## Testing
 
