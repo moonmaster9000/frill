@@ -156,7 +156,7 @@ Feature: Consistent Timestamp Presentation in the API
 
   Scenario: Presenting timestamps
     When I retrieve content with a "created_at" timestamp via the JSON API
-    Then I should see that timestamp formatted as follows: YYYY/MM/DD
+    Then I should see that timestamp formatted for the client's locale as follows: Month DD, YYYY HH:MM 
 ```
 
 You attempt to salvage the helper, updating it with concerns for the JSON format:
