@@ -1,3 +1,7 @@
+v0.1.11
+
+Added "frill" helper to rspec integration.
+
 v0.1.10
 
 Add "MIT" license to gem specification.

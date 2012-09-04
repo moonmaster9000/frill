@@ -280,6 +280,50 @@ Now, any instance variables you create in your controllers will be automatically
 
 ## Testing
 
+If you're using frill inside a Rails application, you can take advantage of the "frill" rspec helper:
+
+```ruby
+require 'spec_helper'
+
+describe HtmlTimestampFrill do
+  let(:model) {
+    Class.new do
+      def created_at
+        DateTime.new(2012, 1, 1)
+      end
+    end.new
+  end
+
+  subject { frill model }
+
+  its(:created_at) { should == "<b>January 01, 2012 00:00<b>" }
+end
+```
+
+It will assume an html request context, and it will embue your model with `h` and `helpers` methods.
+
+If you're attempting to test the `MyFrill.frill?` method, you'll need to supply it with stubs:
+
+```ruby
+require 'spec_helper'
+
+describe HtmlTimestampFrill do
+  let(:context) { double :view_context }
+
+  subject { HtmlTimestampFrill.frill? double(:model, created_at: "foo"), context }
+
+  context "given an HTML request" do
+    before { context.stub_chain(:request, :format, :html?).and_return true }
+    it { should be_true }
+  end
+
+  context "given a non-HTML request" do
+    before { context.stub_chain(:request, :format, :html?).and_return false }
+    it { should be_false }
+  end
+end
+```
+
 Since frills are just modules, it's possible to test your frills in relative isolation.
 
 ```ruby
