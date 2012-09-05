@@ -330,6 +330,8 @@ describe HtmlTimestampFrill do
 end
 ```
 
+Note (2012/09/05): because of a subtle bug in RSpec, the above stub chain `stub_chain(:request, :format, :html?)` fails on the latest RSpec release (2.11.0) but is fixed in master. See issue [#587](https://github.com/rspec/rspec-rails/issues/587) and the [commit that fixes it](https://github.com/rspec/rspec-mocks/commit/05741e90083280c1b9e069350d7e3afbf4a45456).
+
 Since frills are just modules, it's possible to test your frills in relative isolation.
 
 ```ruby
