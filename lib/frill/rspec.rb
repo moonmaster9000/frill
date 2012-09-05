@@ -1,9 +1,9 @@
 module Frill
   module RSpec
     module Helpers
-      def frill model
+      def frill model, options={}
         view_context = ApplicationController.new.view_context.tap do |context|
-          context.controller.request ||= ActionController::TestRequest.new
+          context.controller.request ||= ActionController::TestRequest.new options
           context.request            ||= context.controller.request
           context.params             ||= {}
         end

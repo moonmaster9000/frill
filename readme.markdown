@@ -294,9 +294,15 @@ describe HtmlTimestampFrill do
     end.new
   end
 
-  subject { frill model }
+  context "html request" do
+    subject { frill model }
+    its(:created_at) { should == "<b>January 01, 2012 00:00<b>" }
+  end
 
-  its(:created_at) { should == "<b>January 01, 2012 00:00<b>" }
+  context "non-html request" do
+    subject { frill model, "HTTP_ACCEPT" => "application/json" }
+    its(:created_at) { should == "January 01, 2012 00:00" }
+  end
 end
 ```
 
