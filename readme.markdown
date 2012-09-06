@@ -2,6 +2,7 @@
 
 [![Build Status](https://secure.travis-ci.org/moonmaster9000/frill.png)](http://travis-ci.org/moonmaster9000/frill)
 [![Build Dependency Status](https://gemnasium.com/moonmaster9000/frill.png)](https://gemnasium.com/moonmaster9000/frill.png)
+[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/moonmaster9000/frill)
 
 Simple decoration of objects for presentation. Out of the box integration with Rails.
 
