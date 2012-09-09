@@ -1,5 +1,15 @@
 # CHANGLOG
 
+## v0.1.13
+
+You can now frill with only a subset of frills:
+
+```ruby
+def index
+  @posts = frill Post.all, with: [PicturePost, TextPost, VideoPost]
+end
+```
+
 ## v0.1.12
 
 You can now set request options on the "frill" rspec helper:
