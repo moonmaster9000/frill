@@ -9,4 +9,9 @@ class HomeController < ApplicationController
   def associations
     @model = Model.new
   end
+
+  def frill_subset
+    @model = frill Model.new, with: [BoldTitleFrill]
+    respond_with @model, template: "home/index"
+  end
 end

@@ -23,13 +23,42 @@ module ActionController
     helper_method :frill 
 
     private
-    def frill object
-      if object.respond_to?(:each)
-        object.each do |o|
-          Frill.decorate o, self
+    def frill object, options={}
+      RailsFrillHelper.new(object, self, options).frill
+    end
+
+    class RailsFrillHelper
+      def initialize(object, controller, options)
+        @object = object
+        @controller = controller
+        @options = options
+      end
+
+      def frill
+        extend_with_view_context
+        frill_object
+        object
+      end
+
+      private
+      attr_reader :options, :object, :controller
+
+      def frill_object
+        objects.each do |o|
+          Frill.decorate o, controller, options
         end
-      else
-        Frill.decorate object, self
+      end
+
+      def extend_with_view_context
+        options[:with] << ViewContextFrill if options[:with]
+      end
+
+      def objects
+        if object.respond_to? :each
+          object
+        else
+          [object]
+        end
       end
     end
   end

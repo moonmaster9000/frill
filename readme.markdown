@@ -104,6 +104,14 @@ Or, in a view:
 <%= render frill(@foo.comments) %>
 ```
 
+### 'frill' with only a subset of frills
+
+You can tell `frill` to consider only a subset of frills for decoration with the `with` option:
+
+```erb
+<%= render frill(@posts, with: [TextPostFrill, PicturePostFrill, VideoPostFrill])
+```
+
 ## A longer story
 
 Your product manager writes the following story for you: 

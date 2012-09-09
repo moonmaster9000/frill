@@ -42,11 +42,33 @@ describe Frill do
       end
     end
 
-    it "should decorate the object with any applicable modules" do
-      Frill.decorate object, object_context
+    context "(object, context)" do
+      it "should decorate the object with any applicable modules" do
+        Frill.decorate object, object_context
 
-      eigenclass.included_modules.should include applicable_module
-      eigenclass.included_modules.should_not include unapplicable_module
+        eigenclass.included_modules.should include applicable_module
+        eigenclass.included_modules.should_not include unapplicable_module
+      end
+    end
+
+    context "(object, context, with: module_subset)" do
+      let!(:another_applicable_module) do
+        Module.new do
+          include Frill
+
+          def self.frill?(*)
+            true
+          end
+        end
+      end
+
+      it "should only attempt to frill with the specified module subset" do
+        Frill.decorate object, object_context, with: [another_applicable_module]
+
+        eigenclass.included_modules.should include another_applicable_module
+        eigenclass.included_modules.should_not include applicable_module
+        eigenclass.included_modules.should_not include unapplicable_module
+      end
     end
   end
 

@@ -8,6 +8,7 @@ module Frill
 
   def self.decorators
     @decorators ||= dependency_graph.to_a
+    @decorators.dup
   end
 
   def self.reset!
@@ -15,12 +16,18 @@ module Frill
     @dependency_graph = nil
   end
 
-  def self.decorate object, context
-   decorators.each do |d|
-     object.extend d if d.frill? object, context
-   end
+  def self.decorate object, context, options={}
+    frills = decorators
 
-   object
+    if subset = options[:with]
+      frills.select! {|d| subset.include? d}
+    end
+
+    frills.each do |f|
+      object.extend f if f.frill? object, context
+    end
+
+    object
   end
 
   def self.dependency_graph
