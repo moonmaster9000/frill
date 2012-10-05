@@ -112,6 +112,25 @@ You can tell `frill` to consider only a subset of frills for decoration with the
 <%= render frill(@posts, with: [TextPostFrill, PicturePostFrill, VideoPostFrill])
 ```
 
+### Order your frill dependencies
+
+If you want to specify the order in which frills are applied, you can use `before` and `after` in your frill modules:
+
+```ruby
+module FooFrill
+  before BarFrill
+end
+
+module BazFrill
+  after BarFrill
+end
+
+module BarFrill
+end
+```
+
+With this setup, `frill` will attempt to apply the modules in the following order: `FooFrill`, `BarFrill`, `BazFrill`.
+
 ## A longer story
 
 Your product manager writes the following story for you: 
