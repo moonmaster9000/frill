@@ -10,8 +10,6 @@ module ViewContextFrill
       define_method :h do
         helpers
       end
-
-      private :h, :helpers
     end
 
     false
