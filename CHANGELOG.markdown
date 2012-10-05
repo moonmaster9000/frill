@@ -1,5 +1,9 @@
 # CHANGLOG
 
+## v0.1.14
+
+small bug fix - h/helpers in your frills no longer private.
+
 ## v0.1.13
 
 You can now frill with only a subset of frills:
