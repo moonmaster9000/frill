@@ -1,7 +1,5 @@
 module Frill
   module Auto
-    protected
-
     def view_assigns
       new_hash = {}
 
